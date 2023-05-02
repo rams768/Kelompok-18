@@ -9,6 +9,15 @@
 void string2hexString(unsigned char* input, int clen, char* output);
 void *hextobyte(char *hexstring, unsigned char* bytearray );
 
+unsigned char* getCipher(unsigned char *cipher, int clen) {
+    unsigned char* output = (unsigned char*) malloc(clen * sizeof(unsigned char));
+
+    for (int i = 0; i < clen; i++) {
+        output[i] = cipher[i];
+    }
+
+    return output;
+}
 
 int main (int argc, char *argv[]) {
 
@@ -18,6 +27,7 @@ int main (int argc, char *argv[]) {
 
   unsigned char plaintext[CRYPTO_BYTES];
   unsigned char cipher[CRYPTO_BYTES];
+  unsigned char tes_cipher[CRYPTO_BYTES];
   unsigned char npub[CRYPTO_NPUBBYTES]="";
   unsigned char ad[CRYPTO_ABYTES]="";
   unsigned char nsec[CRYPTO_ABYTES]="";
@@ -26,6 +36,7 @@ int main (int argc, char *argv[]) {
 
   char pl[CRYPTO_BYTES]="";
   char chex[CRYPTO_BYTES]="";
+  char tes_chex[CRYPTO_BYTES]="";
   char keyhex[2*CRYPTO_KEYBYTES+1]="0123456789ABCDEF0123456789ABCDEF";
   char nonce[2*CRYPTO_NPUBBYTES+1]="000000000000111111111111";
   char add[CRYPTO_ABYTES]="";
@@ -74,13 +85,22 @@ int main (int argc, char *argv[]) {
 
   //PERINTAH MENAMPILKAN CHIPER
   //printf("Cipher: %s, Len: %llu\n",chex, clen);
-
+  printf("AWAL\n");
   printf("chex : %s\n", chex);
-  //printf("%s", cipher);
+  printf("cipher : %s, Len: %d\n", cipher, strlen(cipher));
+  //printf("tes : %s", tes);
   ret = crypto_aead_decrypt(plaintext,&mlen,nsec,cipher,clen,ad,strlen(ad),npub,key);
   plaintext[mlen]='\0';
   printf("Plaintext: %s, Len: %llu\n",plaintext, mlen);
 
+  hexString2string(chex, strlen(chex), tes_cipher);
+  ret = crypto_aead_decrypt(plaintext,&mlen,nsec,tes_cipher,clen,ad,strlen(ad),npub,key);
+  printf("\nAKHIR\n");
+  printf("chex : %s\n", chex);
+  printf("tes cipher : %s\n", tes_cipher);
+  printf("Plaintext-Tes: %s, Len: %llu\n",plaintext, mlen);
+  string2hexString(tes_cipher,clen,chex);
+  printf("chex : %s\n", chex);
 
   if (ret==0) {
     //printf("Success!\n");
@@ -106,6 +126,22 @@ void string2hexString(unsigned char* input, int clen, char* output)
     //insert NULL at the end of the output string
     output[i++] = '\0';
 }
+
+void hexString2string(char* hex, int hexlen, char* output) {
+    int i, j;
+    char two_chars[3];
+    two_chars[2] = '\0';
+
+    for (i = 0, j = 0; i < hexlen; i += 2, j++) {
+        two_chars[0] = hex[i];
+        two_chars[1] = hex[i + 1];
+        output[j] = (char)strtol(two_chars, NULL, 16);
+    }
+    output[j] = '\0';
+}
+
+
+
 void *hextobyte(char *hexstring, unsigned char* bytearray ) {
 
     int i;
