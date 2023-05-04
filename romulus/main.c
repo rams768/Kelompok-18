@@ -21,7 +21,6 @@ unsigned char* getCipher(unsigned char *cipher, int clen) {
 
 int main (int argc, char *argv[]) {
 
-
   unsigned long long mlen;
   unsigned long long clen;
 
@@ -84,15 +83,23 @@ int main (int argc, char *argv[]) {
   string2hexString(cipher,clen,chex);
 
   //PERINTAH MENAMPILKAN CHIPER
-  //printf("Cipher: %s, Len: %llu\n",chex, clen);
-  printf("AWAL\n");
-  printf("chex : %s\n", chex);
-  printf("cipher : %s, Len: %d\n", cipher, strlen(cipher));
+  printf("Cipher: %s, Len: %llu\n",cipher, clen);
+  //printf("AWAL\n");
+  printf("cipher dalam hexadecimal : %s\n", chex);
+  //printf("cipher : %s, Len: %d\n", cipher, strlen(cipher));
   //printf("tes : %s", tes);
   ret = crypto_aead_decrypt(plaintext,&mlen,nsec,cipher,clen,ad,strlen(ad),npub,key);
   plaintext[mlen]='\0';
   printf("Plaintext: %s, Len: %llu\n",plaintext, mlen);
 
+  /*
+  printf("\nAKHIR\n");
+  printf("chex : %s\n", chex);
+  printf("Plaintext-Tes: %s, Len: %llu\n",plaintext, mlen);
+  printf("chex : %s\n", chex);
+  */
+
+  /*
   hexString2string(chex, strlen(chex), tes_cipher);
   ret = crypto_aead_decrypt(plaintext,&mlen,nsec,tes_cipher,clen,ad,strlen(ad),npub,key);
   printf("\nAKHIR\n");
@@ -101,6 +108,7 @@ int main (int argc, char *argv[]) {
   printf("Plaintext-Tes: %s, Len: %llu\n",plaintext, mlen);
   string2hexString(tes_cipher,clen,chex);
   printf("chex : %s\n", chex);
+  */
 
   if (ret==0) {
     //printf("Success!\n");
