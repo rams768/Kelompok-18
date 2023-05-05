@@ -22,6 +22,8 @@ int main() {
     memset(key, 0, sizeof(key));
     memset(nonce, 0, sizeof(nonce));
 
+    ad_len = strlen((char*) ad) - 1;
+    ad[ad_len] = '\0';
     // Input plaintext
     printf("Masukkan plaintext: ");
     fgets((char*) plaintext, MAX_MSG_LENGTH, stdin);
@@ -31,8 +33,6 @@ int main() {
     // Input additional data
     //printf("Masukkan additional data: ");
     //fgets((char*) ad, AD_BLK_LEN_EVN, stdin);
-    ad_len = strlen((char*) ad) - 1;
-    ad[ad_len] = '\0';
 
     // Enkripsi plaintext
     if (crypto_aead_encrypt(ciphertext, &ciphertext_len, plaintext, plaintext_len, ad, ad_len, NULL, nonce, key) != 0) {
